@@ -389,8 +389,8 @@ wait2(int *status)
 }
 
 int
-waitpid(void){
-  int pid,int *status, int options;
+waitpid(int pid,int *status, int options){
+  
   struct proc *p;
   struct proc *curproc = myproc();
 
