@@ -43,7 +43,24 @@ sys_wait2(void)
   }
   return wait2(status);
 }
+int
+sys_waitpid(void){
+  int pid;
+  if (argint(0, &pid)< 0){
+    return -1;
+  }
+  
+  int *status;
+  if(argptr(1, (char**) &status, sizeof(status)) < 0){
+    return -1;
+  }
+  int options;
+  if(argint(2,&options)){
+    return -1;
+  }
 
+  return waitpid(0, 0, 0);
+}
 int
 sys_kill(void)
 {
