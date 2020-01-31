@@ -387,6 +387,48 @@ wait2(int *status)
 		sleep(curproc, &ptable.lock);
 	}
 }
+
+int
+waitpid(void){
+  int pid,int *status, int options;
+  struct proc *p;
+  struct proc *curproc = myproc();
+
+  int havePid = 0;
+
+  acquire(&ptable.lock);
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->pid != pid){
+      continue;
+    } else {
+      for(;;) {
+        havePid = 1;
+        if(p->state == ZOMBIE) {
+        //found
+          if (status != 0){
+           *status = p->status;
+          }
+          kfree(p->kstack);
+          p->kstack = 0;
+          freevm(p->pgdir);
+          p->pid = 0;
+          p->parent = 0;
+          p->name[0] = 0;
+          p->killed = 0;
+          p->state = UNUSED;
+          release(&ptable.lock);
+          return pid;
+        }
+      }
+    }
+    sleep(curproc, &ptable.lock);
+  }
+  if(!havePid || curproc->killed) {
+    release(&ptable.lock);
+    return -1;
+  }
+  return -1;
+}
 //PAGEBREAK: 42
 // Per-CPU process scheduler.
 // Each CPU calls scheduler() after setting itself up.
