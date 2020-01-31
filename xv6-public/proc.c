@@ -394,14 +394,14 @@ waitpid(int pid,int *status, int options){
   struct proc *p;
   struct proc *curproc = myproc();
 
-  int havePid = 0;
+  int haveKid = 0;
 
   acquire(&ptable.lock);
   for(;;){
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->pid != pid)
         continue;
-      havePids = 1;
+      haveKid = 1;
       if(p->state == ZOMBIE){
         // Found one.
 	if(status != 0){
@@ -421,7 +421,7 @@ waitpid(int pid,int *status, int options){
     }
 
     // No point waiting if we don't have any children.
-    if(!havekids || curproc->killed){
+    if(!haveKid || curproc->killed){
       release(&ptable.lock);
       return -1;
     }
