@@ -14,11 +14,12 @@
 00000000 ulib.c
 00000000 printf.c
 00000360 printint
-0000079a digits.1358
+0000079a digits.1362
 00000000 umalloc.c
 00000a18 freep
 00000a1c base
 00000080 strcpy
+00000352 waitpid
 00000400 printf
 00000270 memmove
 000002ea mknod

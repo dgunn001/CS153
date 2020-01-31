@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
    printf(1, "\ntype \"lab1 1\" to test exit and wait, \"lab1 2\" to test waitpid and \"lab1 3\" to test the extra credit WNOHANG option \n");
   
     // End of test
-	 exit(0);
+	 exit2(0);
 	 return 0;
  }
   
