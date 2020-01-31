@@ -415,6 +415,7 @@ waitpid(int pid,int *status, int options){
         p->name[0] = 0;
         p->killed = 0;
         p->state = UNUSED;
+	p->status = 0;
         release(&ptable.lock);
         return pid;
       }
