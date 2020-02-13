@@ -448,7 +448,7 @@ scheduler(void)
   struct proc *highest; 
   struct cpu *c = mycpu();
   c->proc = 0;
-  int priority = 40;
+  
   for(;;){
     // Enable interrupts on this processor.
     sti();
@@ -482,7 +482,7 @@ scheduler(void)
     }
     release(&ptable.lock);
 
-  }
+  
 }
 
 //set priority with the new priority value in the parameter
