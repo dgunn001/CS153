@@ -444,45 +444,49 @@ waitpid(int pid,int *status, int options){
 void
 scheduler(void)
 {
-  struct proc *p;
-  struct proc *highest; 
+  struct proc *p; 
   struct cpu *c = mycpu();
   c->proc = 0;
-  
+  struct proc *highP;
   for(;;){
     // Enable interrupts on this processor.
     sti();
 
     // Loop over process table looking for process to run.
-    acquire(&ptable.lock);
-    highest = ptable.proc;   
+    acquire(&ptable.lock); 
+    highP = ptable.proc;
+
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-	if(p->priority > highest-> priority){
-		highest = p;
+	if(p->state != RUNNABLE || p->priority > highP->priority){
+	   if(p->state == RUNNABLE){
+		if(p->priority >0){
+		   p->priority--; // increase priroity
+		}
+	   }
+	continue;
+         }
+	
+	if(p->priority < highP->priority){
+		highP = p;
+	}else{
+	   if(p->priority >0){
+	      p->priority--;
+	   }
 	}
     }
-	p = highest;
-        if(p->state != RUNNABLE)
-        continue;
-
-      // Switch to chosen process.  It is the process's job
-      // to release ptable.lock and then reacquire it
-      // before jumping back to us.
-      p->priority++; 
-      c->proc = p;
-      switchuvm(p);
-      p->state = RUNNING;
-
-      swtch(&(c->scheduler), p->context);
-      switchkvm();
-
-      // Process is done running for now.
-      // It should have changed its p->state before coming back.
-      c->proc = 0;
-    }
+    
+	c->proc = highP;
+	switchuvm(highP);
+	highP->state = RUNNING;
+	highP->priority++; // for aging
+	swtch(&c->scheduler,highP->context);
+	switchkvm();
+	c->proc = 0;
+	   
+	
     release(&ptable.lock);
 
-  
+ } 
 }
 
 //set priority with the new priority value in the parameter
