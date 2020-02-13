@@ -477,6 +477,23 @@ scheduler(void)
   }
 }
 
+//set priority with the new priority value in the parameter
+int
+setpriority(int newPriority)
+{
+   //check bounds of priority 
+   if(newPriority < 0 || newPriority > 31){
+	return -1;
+   }
+ 
+   struct proc* myProc = myproc();
+   //set priority of proc to new priority
+   acquire(&ptable.lock);
+   myProc->priority = newPriority;
+   release(&ptable.lock);
+   return 0;
+}
+
 // Enter scheduler.  Must hold only ptable.lock
 // and have changed proc->state. Saves and restores
 // intena because intena is a property of this
