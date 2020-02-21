@@ -21,6 +21,8 @@ int AgingScheduler(void) {
 
   int pid;
   int i;
+  int k;
+  int j;
   setpriority(31);
   for (i = 0; i < 3; i++) {
     pid = fork();
@@ -29,8 +31,12 @@ int AgingScheduler(void) {
 	}
     else if (pid == 0) {
       setpriority(30 - 10*i);
-      printf(1, "\n child# %d with original priority %d and new priority %d has finished! \n", getpid(), 30 - 10*i, getpriority());
+      for( j = 0; j<50000; ++j){
+	for( k = 0; k <1000; k++){
+	asm("nop");}}
+	printf(1, "\n child# %d with original priority %d and new priority %d has finished! \n", getpid(), 30 - 10*i, getpriority());
       exit2(0);
+	
     }
     else {
       printf(2, "\n Error \n");
@@ -43,8 +49,6 @@ int AgingScheduler(void) {
 	}
       printf(1, "\n Parent#%d exits with priority %d \n", getpid(), getpriority());
 
-printf(1, "\n Child processes should all finish first. Parent process will wait until all children exit then exit.\n");
-    printf(1, "\n Correct if parent process will decrement in priority then exit.\n");
   }
   exit2(0);
   return 0;
