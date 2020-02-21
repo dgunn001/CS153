@@ -136,3 +136,8 @@ int sys_setpriority(void)
       return setpriority(priority);
    }
 }
+
+int sys_getpriority(void)
+{
+ return getpriority();
+}
