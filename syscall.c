@@ -19,8 +19,7 @@ fetchint(uint addr, int *ip)
 {
   
 
-  if(addr >= KERNBASE || addr+4 > KERNBASE)
-    return -1;
+  
   *ip = *(int*)(addr);
   return 0;
 }
@@ -34,8 +33,6 @@ fetchstr(uint addr, char **pp)
   char *s, *ep;
  
 
-  if(addr >= KERNBASE)
-    return -1;
   *pp = (char*)addr;
   ep = (char*)KERNBASE;
   for(s = *pp; s < ep; s++){
@@ -63,8 +60,7 @@ argptr(int n, char **pp, int size)
  
   if(argint(n, &i) < 0)
     return -1;
-  if(size < 0 || (uint)i >= KERNBASE || (uint)i+size > KERNBASE)
-    return -1;
+  
   *pp = (char*)i;
   return 0;
 }
