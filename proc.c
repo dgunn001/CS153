@@ -196,6 +196,8 @@ fork(void)
     np->state = UNUSED;
     return -1;
   }
+  
+  np->numOfPages = curproc->numOfPages;
   np->sz = curproc->sz;
   np->parent = curproc;
   *np->tf = *curproc->tf;

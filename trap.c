@@ -78,6 +78,22 @@ trap(struct trapframe *tf)
     lapiceoi();
     break;
 
+  case T_PGFLT:
+  if( ( rcr2() < PGROUNDUP(KERNBASE - 4 - myproc()->numOfPages*PGSIZE) ) && ( rcr2() < PGROUNDUP(KERNBASE - 4 - (myproc()->numOfPages - 1)*PGSIZE) ) ) {  //Checks if data acess is right above last page if so then increase page size
+ 	   myproc()->numOfPages = 1 + myproc()->numOfPages;
+
+ if( allocuvm(myproc()->pgdir, (KERNBASE - 4 - myproc()->numOfPages*PGSIZE) , (KERNBASE - 4 - (myproc()->numOfPages - 1)*PGSIZE)) == 0 ) { //checks if allocum is able to fit if not then output error
+																           //allocate new page above previouse last page but since we added a new page we just subtract it from 1 for the size
+     	  cprintf("Page Fault, ran out of memory\n");
+    }
+  }
+ 
+ break;
+
+
+
+
+
   //PAGEBREAK: 13
   default:
     if(myproc() == 0 || (tf->cs&3) == 0){
