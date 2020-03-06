@@ -40,7 +40,12 @@ exec(char *path, char **argv)
 
   // Load program into memory.
   sz = 0;
-  for(i=0, off=elf.phoff; i<elf.phnum; i++, off+=sizeof(ph)){
+ if((sz = allocuvm(pgdir, sz, sz + PGSIZE)) == 0)
+   goto bad;
+ clearpteu(pgdir, (char*)(sz-PGSIZE));
+
+
+ for(i=0, off=elf.phoff; i<elf.phnum; i++, off+=sizeof(ph)){
     if(readi(ip, (char*)&ph, off, sizeof(ph)) != sizeof(ph))
       goto bad;
     if(ph.type != ELF_PROG_LOAD)
@@ -99,6 +104,9 @@ exec(char *path, char **argv)
   curproc->sz = sz;
   curproc->tf->eip = elf.entry;  // main
   curproc->tf->esp = sp;
+   
+  curproc->pages = 1;
+	
   switchuvm(curproc);
   freevm(oldpgdir);
   return 0;

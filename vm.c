@@ -315,6 +315,7 @@ clearpteu(pde_t *pgdir, char *uva)
 pde_t*
 copyuvm(pde_t *pgdir, uint sz)
 {
+  struct proc *p = myproc();
   pde_t *d;
   pte_t *pte;
   uint pa, i, flags;
@@ -337,11 +338,10 @@ copyuvm(pde_t *pgdir, uint sz)
       goto bad;
     }
   }
-  if(pointystack == 0)
-	return d;
+  
 
-  for(i = pointystack; i < USERSPACE; i += PGSIZE){
-      if((pte = walkpgdir(pgdir,(void*)i, 1)) == )
+  for(i = (USERSPACE - p->pages + PGSIZE + 4); i < USERSPACE; i += PGSIZE){
+      if((pte = walkpgdir(pgdir,(void*)i, 0)) == 0)
 	panic("copyuvm: pte should exist");
 	if(!(*pte & PTE_P))
 	panic("copyuvm: page not present");
