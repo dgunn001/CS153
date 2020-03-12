@@ -340,7 +340,7 @@ copyuvm(pde_t *pgdir, uint sz)
   }
 //<<<<<<< HEAD
   for(i = myproc()->stackindex; i < STACKTOP; i += PGSIZE){
-    if((pte = walkpgdir(pgdir,(void*) i, 0 )) == )
+    if((pte = walkpgdir(pgdir,(void*) i, 0 )) == 0)
       panic("copyuvm: pte should exist");
     if(!(*pte & PTE_P))
       panic("copyuvm: page not present. Inside new loop.");

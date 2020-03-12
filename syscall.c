@@ -70,20 +70,20 @@ int
 argptr(int n, char **pp, int size)
 {
   int i;
-<<<<<<< HEAD
+//<<<<<<< HEAD
   //struct proc *curproc = myproc();
  
   if(argint(n, &i) < 0)
     return -1;
   if(size < 0 || (uint)i >= STACKTOP || (uint)i+size > STACKTOP)
     return -1;
-=======
+//=======
   
  
   if(argint(n, &i) < 0)
     return -1;
   
->>>>>>> 46c749be6d1057321498473c0b24918f6ce5d16c
+//>>>>>>> 46c749be6d1057321498473c0b24918f6ce5d16c
   *pp = (char*)i;
   return 0;
 }

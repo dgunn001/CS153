@@ -77,12 +77,27 @@ trap(struct trapframe *tf)
             cpuid(), tf->cs, tf->eip);
     lapiceoi();
     break;
+  case T_PGFLT:;
+	struct proc* curproc = myproc();
+	uint PGFLTADDR = rcr2();
+	if( PGFLTADDR >= curproc->stackindex - PGSIZE && PGFLTADDR <= curproc->stackindex){
+	  pde_t *pgdir;
+	  pgdir = curproc->pgdir;
+	  if(allocuvm(pgdir, PGROUNDDOWN(PGFLTADDR), PGFLTADDR) == 0){
+	    cprintf("case T_PGFLT from trap.c: allocuvm failed. Number of current allocared pages: %d\n", myproc()->stacksz);
+	    exit();
+	  }
+	  cprintf("case T_PGFLT from the trap.c: allocuvm succeeded. Number of Pages allocated: %d\n", myproc()->stacksz);
+	  curproc->stacksz += 1;
+	  curproc->stackindex = (uint)PGROUNDDOWN(PGFLTADDR);
+	}
+	break;
 
   //PAGEBREAK: 13
   default:
     if(myproc() == 0 || (tf->cs&3) == 0){
       // In kernel, it must be our mistake.
-      cprintf("unexpected trap %d from cpu %d eip %x (cr2=0x%x)\n",
+     cprintf("unexpected trap %d from cpu %d eip %x (cr2=0x%x)\n",
               tf->trapno, cpuid(), tf->eip, rcr2());
       panic("trap");
     }

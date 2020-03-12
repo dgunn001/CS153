@@ -40,10 +40,6 @@ exec(char *path, char **argv)
 
   // Load program into memory.
   sz = 0;
- sz = PGROUNDUP(sz);
- if((sz = allocuvm(pgdir, sz, sz + PGSIZE)) == 0)
-   goto bad;
- clearpteu(pgdir, (char*)(sz-PGSIZE));
 
 
  for(i=0, off=elf.phoff; i<elf.phnum; i++, off+=sizeof(ph)){
@@ -76,8 +72,6 @@ exec(char *path, char **argv)
   sp = STACKTOP;
 //=======
   
-  if((sp = allocuvm(pgdir, KERNBASE-4-PGSIZE, KERNBASE-4 )) == 0)
-    goto bad;
  // clearpteu(pgdir, (char*)(sz - 2*PGSIZE));
   //sp = KERNBASE-4;
 //>>>>>>> 46c749be6d1057321498473c0b24918f6ce5d16c
@@ -115,9 +109,6 @@ exec(char *path, char **argv)
   curproc->sz = sz;
   curproc->tf->eip = elf.entry;  // main
   curproc->tf->esp = sp;
-   
-  curproc->pages = 1;
-	
   switchuvm(curproc);
   freevm(oldpgdir);
   return 0;
