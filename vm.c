@@ -337,6 +337,21 @@ copyuvm(pde_t *pgdir, uint sz)
       goto bad;
     }
   }
+  for(i = myproc()->stackindex; i < STACKTOP; i += PGSIZE){
+    if((pte = walkpgdir(pgdir,(void*) i, 0 )) == )
+      panic("copyuvm: pte should exist");
+    if(!(*pte & PTE_P))
+      panic("copyuvm: page not present. Inside new loop.");
+    pa = PTE_ADDR(*pte);
+    flags = PTE_FLAGS(*pte);
+    if((mem = kalloc()) == 0)
+      goto bad;
+    memmove(mem, (char*)P2V(pa), PGSIZE);
+    if(mappages(d, (void*)i, PGSIZE, V2P(mem), flags) < 0) {
+      kfree(mem);
+      goto bad;
+    }
+  }
   return d;
 
 bad:
