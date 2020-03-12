@@ -17,10 +17,16 @@
 int
 fetchint(uint addr, int *ip)
 {
+<<<<<<< HEAD
   //struct proc *curproc = myproc();
 
   if(addr >= STACKTOP)
     return -1;
+=======
+  
+
+  
+>>>>>>> 46c749be6d1057321498473c0b24918f6ce5d16c
   *ip = *(int*)(addr);
   return 0;
 }
@@ -32,12 +38,19 @@ int
 fetchstr(uint addr, char **pp)
 {
   char *s, *ep;
+<<<<<<< HEAD
   //struct proc *curproc = myproc();
 
   if(addr >= STACKTOP)
     return -1;
   *pp = (char*)addr;
   ep = (char*)STACKTOP;
+=======
+ 
+
+  *pp = (char*)addr;
+  ep = (char*)KERNBASE;
+>>>>>>> 46c749be6d1057321498473c0b24918f6ce5d16c
   for(s = *pp; s < ep; s++){
     if(*s == 0)
       return s - *pp;
@@ -59,12 +72,20 @@ int
 argptr(int n, char **pp, int size)
 {
   int i;
+<<<<<<< HEAD
   //struct proc *curproc = myproc();
  
   if(argint(n, &i) < 0)
     return -1;
   if(size < 0 || (uint)i >= STACKTOP || (uint)i+size > STACKTOP)
     return -1;
+=======
+  
+ 
+  if(argint(n, &i) < 0)
+    return -1;
+  
+>>>>>>> 46c749be6d1057321498473c0b24918f6ce5d16c
   *pp = (char*)i;
   return 0;
 }
