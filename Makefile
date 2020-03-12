@@ -183,6 +183,7 @@ UPROGS=\
 	_zombie\
 	_lab1\
 	_lab2\
+	_lab3\
 	_lab2Age\
 
 fs.img: mkfs README $(UPROGS)
