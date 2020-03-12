@@ -338,7 +338,7 @@ copyuvm(pde_t *pgdir, uint sz)
       goto bad;
     }
   }
-<<<<<<< HEAD
+//<<<<<<< HEAD
   for(i = myproc()->stackindex; i < STACKTOP; i += PGSIZE){
     if((pte = walkpgdir(pgdir,(void*) i, 0 )) == )
       panic("copyuvm: pte should exist");
@@ -354,7 +354,7 @@ copyuvm(pde_t *pgdir, uint sz)
       goto bad;
     }
   }
-=======
+//=======
   
 
   for(i = (USERSPACE - p->pages + PGSIZE + 4); i < USERSPACE; i += PGSIZE){
@@ -371,7 +371,7 @@ copyuvm(pde_t *pgdir, uint sz)
 	kfree(mem);
 	goto bad;
    }
->>>>>>> 46c749be6d1057321498473c0b24918f6ce5d16c
+//>>>>>>> 46c749be6d1057321498473c0b24918f6ce5d16c
   return d;
 
 bad:
